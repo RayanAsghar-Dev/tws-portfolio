@@ -3,11 +3,11 @@ name: Portfolio Deployment to VMware
 on:
   push:
     branches:
-      - main  # Jab bhi main branch par push ho
+      - main
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted  # <--- Yeh aapke VMware runner ko bol raha hai kaam karne ko
+    runs-on: self-hosted
     
     steps:
     - name: Checkout Code
@@ -15,8 +15,8 @@ jobs:
 
     - name: Deploy static site to Local Nginx
       run: |
-        # Purani default files ko saaf karein
+        # Purani files ko forcefully saaf karein agar hain toh
         rm -rf /var/www/html/*
         
-        # Naya portfolio ka code Nginx ke public folder mein copy karein
-        cp -r . /var/www/html/
+        # Sirf website ka code copy karein, .git hidden folder ko chhor dein
+        rsync -av --exclude='.git' ./ /var/www/html/
